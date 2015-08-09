@@ -1,7 +1,7 @@
 # ng-utils
 ###### Daily use angular directives
 
-#### **form.input.formatter**
+### **form.input.formatter**
 
 ###### The directive purpose is to support the scenarios where we need to have different containment in the input-tag and the value stored against the model.
     
@@ -28,4 +28,4 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 	1.	Currently only `number` and `currency` filters are supported.
 	2.	...
 
-#### **TBD**
+### **TBD**
