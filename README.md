@@ -23,9 +23,7 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 <input input-formatter="currency:$:2" type="text" ng-model="your-model"/>
 ```
 
-*	Existing Minor Issues
+*	Limitations
     
 	1.	Currently only `number` and `currency` filters are supported.
 	2.	...
-
-2.  **TBD**
