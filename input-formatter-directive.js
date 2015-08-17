@@ -17,7 +17,7 @@
  *
  */
 
-! function (ng) {
+!(function (ng) {
 	'use strict';
 
 	var customRender = function (el, prevVal, newVal, ngModelCtrl, setCursor) {
@@ -86,7 +86,17 @@
 
 				ngModelCtrl.$formatters.push(function toView(modelValue) {
 
-					//Taking care of the cases where the modelvalue from the database is not a string like null or some number value
+					//Let's handle the cases
+					//	1. where database has the data in a different format than what we intend to save in the model or view-value
+					// like database may store the value as 3423.89 or 3423.00 whereas the front-end model should be 3423 and view value should be 3,423
+
+					if (precisionParam === precisionParam && precisionParam !== 0) {
+						modelValue = parseFloat(modelValue);
+					} else {
+						modelValue = parseInt(modelValue);
+					}
+
+					//	2.	taking care of integers
 					modelValue = modelValue ? modelValue.toString() : '';
 
 					var viewValue = $filter(inputFormatterAttrs[0])(modelValue.replace(regEx, ''), firstParam, secondParam);
@@ -95,10 +105,7 @@
 
 					return viewValue;
 				});
-
 			}
-		}
-
+		};
 	}]);
-
-}(angular);
+})(angular);
