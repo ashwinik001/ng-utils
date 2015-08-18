@@ -23,94 +23,123 @@
 
 	var customRender = function (el, prevVal, newVal, ngModelCtrl, setCursor) {
 
-		var start = el.selectionStart;
-		var end = el.selectionEnd + newVal.length - prevVal.length;
+			var start = el.selectionStart;
+			var end = el.selectionEnd + newVal.length - prevVal.length;
 
-		ngModelCtrl.$setViewValue(newVal);
-		ngModelCtrl.$render();
+			ngModelCtrl.$setViewValue(newVal);
+			ngModelCtrl.$render();
 
-		//if (setCursor)
-		el.setSelectionRange(end, end);
-	};
+			//if (setCursor)
+			el.setSelectionRange(end, end);
+		},
+		NUMBER_DIRECTIVE_NAME = 'number',
+		CURRENCY_DIRECTIVE_NAME = 'currency',
+		PERCENTAGE_DIRECTIVE_NAME = 'percentage';
 
-	ng.module('form.input.formatter', []).directive('inputFormatter', ['$filter', function ($filter) {
-
-		return {
-			require: 'ngModel',
-			restrict: 'A',
-			link: function ($scope, $iElement, $iAttrs, ngModelCtrl) {
-
-				var inputFormatterAttrs = $iAttrs.inputFormatter.split(':'),
-					filterName, regEx,
-					el = $iElement[0],
-					firstParam, secondParam, precisionParam;
-
-				if (inputFormatterAttrs.length === 0) {
-					return;
+	ng.module('form.input.formatter', [])
+		.filter('percentage', ['$window', '$filter', function ($window, $filter) {
+			return function (sample, appender, precision) {
+				if (sample !== sample) {
+					return '';
 				}
 
-				filterName = inputFormatterAttrs[0];
-				firstParam = inputFormatterAttrs[1];
-				secondParam = inputFormatterAttrs[2];
+				appender = appender || '%';
 
-				if (filterName === 'number') {
-					precisionParam = parseInt(firstParam);
-				} else if (filterName === 'currency') {
-					precisionParam = parseInt(secondParam);
-				}
+				precision = isFinite(precision) ? precision : 0;
 
-				if (precisionParam === precisionParam && precisionParam !== 0) {
-					//precision param provided is a good integer and it is not zero
-					//That case we should scrap all non-digit integers and we should not scrap the last decimal point
-					regEx = /[^0-9.]|\.(?=.*\.)/g;
-				} else {
-					//precision param provided implied is zero
-					//That case we should scrap all non-digit integers (including dots/decimals)
-					regEx = /[^0-9]/g;
-				}
+				return $filter('number')(sample, precision) + ' ' + appender;
+			};
+		}])
+		.directive('inputFormatter', ['$filter', function ($filter) {
 
-				ngModelCtrl.$parsers.push(function toModel(viewValue) {
+			return {
+				require: 'ngModel',
+				restrict: 'A',
+				link: function ($scope, $iElement, $iAttrs, ngModelCtrl) {
 
-					var modelValue = $filter(inputFormatterAttrs[0])(viewValue.toString()
-						.replace(regEx, ''), firstParam, secondParam);
+					var inputFormatterAttrs = $iAttrs.inputFormatter.split(':'),
+						filterName, regEx,
+						el = $iElement[0],
+						firstParam, secondParam, precisionParam, formatterParam;
 
-					if (modelValue === viewValue) {
-						return modelValue;
+					if (inputFormatterAttrs.length === 0) {
+						return;
 					}
 
-					//customRender(el, viewValue, modelValue, ngModelCtrl, true);
-					customRender(el, viewValue, modelValue, ngModelCtrl);
+					filterName = inputFormatterAttrs[0];
+					firstParam = inputFormatterAttrs[1];
+					secondParam = inputFormatterAttrs[2];
 
-					modelValue = modelValue.replace(regEx, '');
-
-					return modelValue;
-				});
-
-				ngModelCtrl.$formatters.push(function toView(modelValue) {
-
-					//Let's handle the cases
-					//	1. where database has the data in a different format than what
-					// we intend to save in the model or view-value
-					// like database may store the value as 3423.89 or 3423.00 whereas
-					// the front-end model should be 3423 and view value should be 3,423
+					if (filterName === NUMBER_DIRECTIVE_NAME) {
+						precisionParam = parseInt(firstParam);
+					} else if (filterName === CURRENCY_DIRECTIVE_NAME || filterName === PERCENTAGE_DIRECTIVE_NAME) {
+						precisionParam = parseInt(secondParam);
+						formatterParam = firstParam;
+					} else {
+						return;
+					}
 
 					if (precisionParam === precisionParam && precisionParam !== 0) {
-						modelValue = parseFloat(modelValue);
+						//precision param provided is a good integer and it is not zero
+						//That case we should scrap all non-digit integers
+						// and we should not scrap the last decimal point
+						regEx = /[^0-9.]|\.(?=.*\.)/g;
 					} else {
-						modelValue = parseInt(modelValue);
+						//precision param provided implied is zero
+						//That case we should scrap all non-digit integers (including dots/decimals)
+						regEx = /[^0-9]/g;
 					}
 
-					//	2.	taking care of integers
-					modelValue = modelValue ? modelValue.toString() : '';
+					if (isFinite(formatterParam)) {
+						console.log('nice: ', formatterParam, filterName, precisionParam, $iElement);
+						throw new Error('Seems you have passed a number \'' + formatterParam +
+							'\' as a prefix/suffix for showing in the view for formatting.');
+					}
 
-					var viewValue = $filter(inputFormatterAttrs[0])(modelValue.replace(regEx, ''),
-						firstParam, secondParam);
+					ngModelCtrl.$parsers.push(function toModel(viewValue) {
 
-					//customRender(el, viewValue, modelValue, ngModelCtrl);
+						var modelValue = $filter(filterName)(viewValue.toString()
+							.replace(regEx, ''), firstParam, secondParam);
 
-					return viewValue;
-				});
-			}
-		};
-	}]);
+						if (modelValue === viewValue) {
+							return modelValue;
+						}
+
+						//customRender(el, viewValue, modelValue, ngModelCtrl, true);
+						customRender(el, viewValue, modelValue, ngModelCtrl);
+
+						modelValue = modelValue.replace(regEx, '');
+
+						return modelValue;
+					});
+
+					ngModelCtrl.$formatters.push(function toView(modelValue) {
+
+						var viewValue;
+
+						//Let's handle the cases
+						//	1. where database has the data in a different format than what
+						// we intend to save in the model or view-value
+						// like database may store the value as 3423.89 or 3423.00 whereas
+						// the front-end model should be 3423 and view value should be 3,423
+
+						if (precisionParam === precisionParam && precisionParam !== 0) {
+							modelValue = parseFloat(modelValue);
+						} else {
+							modelValue = parseInt(modelValue);
+						}
+
+						//	2.	taking care of integers
+						modelValue = modelValue ? modelValue.toString() : '';
+
+						viewValue = $filter(filterName)(modelValue.replace(regEx, ''),
+							firstParam, secondParam);
+
+						//customRender(el, viewValue, modelValue, ngModelCtrl);
+
+						return viewValue;
+					});
+				}
+			};
+		}]);
 })(angular);
