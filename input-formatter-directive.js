@@ -1,23 +1,24 @@
 /**
  * Created by ashwinikumar on 23/07/15.
- * The directive purpose is to support the scenarios where we need to have different containment in the input-tag and the value stored against the model.
+ * The directive purpose is to support the scenarios where we need to have different c
+ * ontainment in the input-tag and the value stored against the model.
  * Usage:
- * 		Dependency Registration
- * 			var module = ng.module('your-module-name', ['form.input.formatter']);
- * 		In HTML-Template (Either of the following)
- * 			<input input-formatter="number" type="text" ng-model="your-model"/>
- * 			<input input-formatter="number:3" type="text" ng-model="your-model"/>
- * 			<input input-formatter="currency" type="text" ng-model="your-model"/>
- * 			<input input-formatter="currency:£" type="text" ng-model="your-model"/>
- * 			<input input-formatter="currency:$:2" type="text" ng-model="your-model"/>
+ *		Dependency Registration
+ *			var module = ng.module('your-module-name', ['form.input.formatter']);
+ *		In HTML-Template (Either of the following)
+ *			<input input-formatter="number" type="text" ng-model="your-model"/>
+ *			<input input-formatter="number:3" type="text" ng-model="your-model"/>
+ *			<input input-formatter="currency" type="text" ng-model="your-model"/>
+ *			<input input-formatter="currency:£" type="text" ng-model="your-model"/>
+ *			<input input-formatter="currency:$:2" type="text" ng-model="your-model"/>
  *
- * 	Existing Minor Issues
- * 		The `,` can not be deleted manually inside the input box -- Which is fine perhaps
- * 		Currently only `number` and `currency` filters are supported.
+ *	Existing Minor Issues
+ *		The `,` can not be deleted manually inside the input box -- Which is fine perhaps
+ *		Currently only `number` and `currency` filters are supported.
  *
  */
 
-!(function (ng) {
+(function (ng) {
 	'use strict';
 
 	var customRender = function (el, prevVal, newVal, ngModelCtrl, setCursor) {
@@ -70,7 +71,8 @@
 
 				ngModelCtrl.$parsers.push(function toModel(viewValue) {
 
-					var modelValue = $filter(inputFormatterAttrs[0])(viewValue.toString().replace(regEx, ''), firstParam, secondParam);
+					var modelValue = $filter(inputFormatterAttrs[0])(viewValue.toString()
+						.replace(regEx, ''), firstParam, secondParam);
 
 					if (modelValue === viewValue) {
 						return modelValue;
@@ -87,8 +89,10 @@
 				ngModelCtrl.$formatters.push(function toView(modelValue) {
 
 					//Let's handle the cases
-					//	1. where database has the data in a different format than what we intend to save in the model or view-value
-					// like database may store the value as 3423.89 or 3423.00 whereas the front-end model should be 3423 and view value should be 3,423
+					//	1. where database has the data in a different format than what
+					// we intend to save in the model or view-value
+					// like database may store the value as 3423.89 or 3423.00 whereas
+					// the front-end model should be 3423 and view value should be 3,423
 
 					if (precisionParam === precisionParam && precisionParam !== 0) {
 						modelValue = parseFloat(modelValue);
@@ -99,7 +103,8 @@
 					//	2.	taking care of integers
 					modelValue = modelValue ? modelValue.toString() : '';
 
-					var viewValue = $filter(inputFormatterAttrs[0])(modelValue.replace(regEx, ''), firstParam, secondParam);
+					var viewValue = $filter(inputFormatterAttrs[0])(modelValue.replace(regEx, ''),
+						firstParam, secondParam);
 
 					//customRender(el, viewValue, modelValue, ngModelCtrl);
 
