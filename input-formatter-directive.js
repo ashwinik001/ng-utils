@@ -11,10 +11,12 @@
  *			<input input-formatter="currency" type="text" ng-model="your-model"/>
  *			<input input-formatter="currency:£" type="text" ng-model="your-model"/>
  *			<input input-formatter="currency:$:2" type="text" ng-model="your-model"/>
+ *			<input input-formatter="percentage:%" type="text" ng-model="your-model"/>
+ *			<input input-formatter="percentage:#:2" type="text" ng-model="your-model"/>
  *
  *	Existing Minor Issues
- *		The `,` can not be deleted manually inside the input box -- Which is fine perhaps
- *		Currently only `number` and `currency` filters are supported.
+ *		The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number
+ *		Currently only `percentage`, `number` and `currency` filters are supported.
  *
  */
 
