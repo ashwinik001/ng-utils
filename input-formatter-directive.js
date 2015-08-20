@@ -14,6 +14,11 @@
  *			<input input-formatter="percentage:%" type="text" ng-model="your-model"/>
  *			<input input-formatter="percentage:#:2" type="text" ng-model="your-model"/>
  *
+ *			This will throw the error saying
+ *			"Seems you have passed a number '3' as a prefix/suffix for showing in the view for formatting."
+ *			--- Cool 'Ehh...' ;-)
+ *			<input input-formatter="percentage:3:%" type="text" ng-model="your-model"/>
+ *
  *	Existing Minor Issues
  *		The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number
  *		Currently only `percentage`, `number` and `currency` filters are supported.
