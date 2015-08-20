@@ -21,7 +21,10 @@
 (function (ng) {
 	'use strict';
 
-	var customRender = function (el, prevVal, newVal, ngModelCtrl, setCursor) {
+	var NUMBER_DIRECTIVE_NAME = 'number',
+		CURRENCY_DIRECTIVE_NAME = 'currency',
+		PERCENTAGE_DIRECTIVE_NAME = 'percentage',
+		customRender = function (el, prevVal, newVal, ngModelCtrl, setCursor) {
 
 			var start = el.selectionStart;
 			var end = el.selectionEnd + newVal.length - prevVal.length;
@@ -31,10 +34,7 @@
 
 			//if (setCursor)
 			el.setSelectionRange(end, end);
-		},
-		NUMBER_DIRECTIVE_NAME = 'number',
-		CURRENCY_DIRECTIVE_NAME = 'currency',
-		PERCENTAGE_DIRECTIVE_NAME = 'percentage';
+		};
 
 	ng.module('form.input.formatter', [])
 		.filter('percentage', ['$window', '$filter', function ($window, $filter) {
@@ -91,24 +91,48 @@
 					}
 
 					if (isFinite(formatterParam)) {
-						console.log('nice: ', formatterParam, filterName, precisionParam, $iElement);
 						throw new Error('Seems you have passed a number \'' + formatterParam +
 							'\' as a prefix/suffix for showing in the view for formatting.');
 					}
 
 					ngModelCtrl.$parsers.push(function toModel(viewValue) {
 
-						var modelValue = $filter(filterName)(viewValue.toString()
-							.replace(regEx, ''), firstParam, secondParam);
+						console.info('viewValue: ', viewValue);
+
+						var cleanViewValue = viewValue.toString().replace(regEx, ''),
+							modelValue = $filter(filterName)(cleanViewValue, firstParam, secondParam),
+							newViewVal = modelValue.toString(),
+							userEnteredPrecisionIncludingDot = 0;
 
 						if (modelValue === viewValue) {
 							return modelValue;
 						}
 
+						//In the input box there should only be as many decimal places as the user had left
+						// while editing if the number is not more than the precision params
+						if (newViewVal.indexOf('.') !== -1) {
+							if (cleanViewValue.indexOf('.') !== -1) {
+								userEnteredPrecisionIncludingDot = cleanViewValue.substring(
+									cleanViewValue.indexOf('.')).length;
+							}
+
+							if (userEnteredPrecisionIncludingDot <= precisionParam) {
+								newViewVal = newViewVal.substring(
+										0, newViewVal.indexOf('.') + userEnteredPrecisionIncludingDot) +
+									newViewVal.substring(newViewVal.indexOf('.') + precisionParam + 1);
+							}
+						}
+
 						//customRender(el, viewValue, modelValue, ngModelCtrl, true);
-						customRender(el, viewValue, modelValue, ngModelCtrl);
+						customRender(el, viewValue, newViewVal, ngModelCtrl);
 
 						modelValue = modelValue.replace(regEx, '');
+
+						if (precisionParam === precisionParam && precisionParam !== 0) {
+							modelValue = parseFloat(modelValue);
+						} else {
+							modelValue = parseInt(modelValue);
+						}
 
 						return modelValue;
 					});
