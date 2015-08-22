@@ -21,11 +21,18 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 <input input-formatter="currency" type="text" ng-model="your-model"/>
 <input input-formatter="currency:£" type="text" ng-model="your-model"/>
 <input input-formatter="currency:$:2" type="text" ng-model="your-model"/>
+<input input-formatter="percentage:%" type="text" ng-model="your-model"/>
+<input input-formatter="percentage:#:2" type="text" ng-model="your-model"/>
 ```
 
-*	Limitations
-    
-	1.	Currently only `number` and `currency` filters are supported.
-	2.	...
+The following will throw the error saying
+"Seems you have passed a number '3' as a prefix/suffix for showing in the view for formatting." --- Cool 'Ehh...' ;-)
+<input input-formatter="percentage:3:%" type="text" ng-model="your-model"/>
 
-### **TBD**
+As per the convention I am prepending the currency symbol and appending the percentage symbol.
+
+*	Existing Minor Issues
+    
+	1.	The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number
+	2.	Currently only `percentage`, `number` and `currency` filters are supported.
+
