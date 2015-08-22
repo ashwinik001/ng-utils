@@ -19,9 +19,13 @@
  *			--- Cool 'Ehh...' ;-)
  *			<input input-formatter="percentage:3:%" type="text" ng-model="your-model"/>
  *
+ * 	As per the convention I am prepending the currency symbol and appending the percentage symbol.
+ *
  *	Existing Minor Issues
  *		The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number
  *		Currently only `percentage`, `number` and `currency` filters are supported.
+ *
+ *
  *
  */
 
@@ -103,8 +107,6 @@
 					}
 
 					ngModelCtrl.$parsers.push(function toModel(viewValue) {
-
-						console.info('viewValue: ', viewValue);
 
 						var cleanViewValue = viewValue.toString().replace(regEx, ''),
 							modelValue = $filter(filterName)(cleanViewValue, firstParam, secondParam),
