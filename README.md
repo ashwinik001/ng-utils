@@ -35,4 +35,4 @@ As per the convention I am prepending the currency symbol and appending the perc
     
 	1.	The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number
 	2.	Currently only `percentage`, `number` and `currency` filters are supported.
-
+	3.	...
