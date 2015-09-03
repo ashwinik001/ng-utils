@@ -66,6 +66,7 @@
 			return {
 				require: 'ngModel',
 				restrict: 'A',
+				scope: true,
 				link: function ($scope, $iElement, $iAttrs, ngModelCtrl) {
 
 					var inputFormatterAttrs = $iAttrs.inputFormatter.split(':'),
