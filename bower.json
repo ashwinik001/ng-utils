@@ -1,0 +1,17 @@
+{
+	"name": "ng-utils",
+  	"description": "Filters and directives for angular, frequently needed",
+  	"keywords": ["angular", "filters", "directives", "utilities", "extension", "utils"],
+	"authors": [
+		"Ashwini Kumar"
+	],
+	"ignore": [
+		"node_modules",
+		"**/bower_components"
+	],
+	"dependencies": {
+		"angular": "*"
+	},
+	"devDependencies": {
+	}
+}

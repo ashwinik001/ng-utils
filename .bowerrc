@@ -1,0 +1,5 @@
+{
+	"directory": "plugins/bower_components",
+	"registry": "http://bower.herokuapp.com",
+	"strict-ssl": false
+}
