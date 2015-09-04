@@ -1,32 +1,6 @@
 /**
- * Created by ashwinikumar on 23/07/15.
- * The directive purpose is to support the scenarios where we need to have different c
- * ontainment in the input-tag and the value stored against the model.
- * Usage:
- *		Dependency Registration
- *			var module = ng.module('your-module-name', ['form.input.formatter']);
- *		In HTML-Template (Either of the following)
- *			<input input-formatter="number" type="text" ng-model="your-model"/>
- *			<input input-formatter="number:3" type="text" ng-model="your-model"/>
- *			<input input-formatter="currency" type="text" ng-model="your-model"/>
- *			<input input-formatter="currency:£" type="text" ng-model="your-model"/>
- *			<input input-formatter="currency:$:2" type="text" ng-model="your-model"/>
- *			<input input-formatter="percentage:%" type="text" ng-model="your-model"/>
- *			<input input-formatter="percentage:#:2" type="text" ng-model="your-model"/>
- *
- *			This will throw the error saying
- *			"Seems you have passed a number '3' as a prefix/suffix for showing in the view for formatting."
- *			--- Cool 'Ehh...' ;-)
- *			<input input-formatter="percentage:3:%" type="text" ng-model="your-model"/>
- *
- * 	As per the convention I am prepending the currency symbol and appending the percentage symbol.
- *
- *	Existing Minor Issues
- *		The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number
- *		Currently only `percentage`, `number` and `currency` filters are supported.
- *
- *
- *
+ * Created by ashwinikumar<kumarashwini@outlook.com>
+ *     on 23/07/15.
  */
 
 (function (ng) {
@@ -61,7 +35,7 @@
 				return $filter('number')(sample, precision) + ' ' + appender;
 			};
 		}])
-		.directive('inputFormatter1', ['$filter', function ($filter) {
+		.directive('inputFormatter', ['$filter', function ($filter) {
 
 			return {
 				require: 'ngModel',
@@ -69,7 +43,7 @@
 				scope: true,
 				link: function ($scope, $iElement, $iAttrs, ngModelCtrl) {
 
-					var inputFormatterAttrs = $iAttrs.inputFormatter1.split(':'),
+					var inputFormatterAttrs = $iAttrs.inputFormatter.split(':'),
 						filterName, viewCleanerRegex,
 						el = $iElement[0],
 						firstParam, secondParam, precisionParam, formatterParam;
@@ -105,7 +79,7 @@
 						viewCleanerRegex = /[^0-9]/g;
 					}
 
-					//Testing, if the user by mistake reverse the directive arguments
+					//Testing, if the user by mistake reverses the directive arguments
 					//Like user paseed 'currency:2:$' in stead of 'currency:$:2'
 					if (isFinite(formatterParam)) {
 						throw new Error('Seems you have passed a number \'' + formatterParam +
@@ -144,7 +118,7 @@
 						}
 
 						if(userEnteredPrecisionIncludingDot === 1) {
-							newViewVal = modelValue.replace(/\.0/g, '.');
+							newViewVal = newViewVal.replace(/\.0/g, '.');
 						}
 						else if(cleanViewVal === '') {
 							newViewVal = '';
@@ -153,13 +127,15 @@
 						//customRender(el, oldViewVal, newViewVal, ngModelCtrl, true);
 						customRender(el, oldViewVal, newViewVal, ngModelCtrl);
 
-						modelValue = modelValue.replace(viewCleanerRegex, '');
+						modelValue = newViewVal.replace(viewCleanerRegex, '');
 
 						if (precisionParam !== 0) {
-							modelValue = parseFloat(newViewVal);
+							modelValue = parseFloat(modelValue);
 						} else {
-							modelValue = parseInt(newViewVal);
+							modelValue = parseInt(modelValue);
 						}
+
+						console.info('modelValue: ', modelValue);
 
 						return modelValue;
 					});
