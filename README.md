@@ -1,7 +1,7 @@
 # ng-utils
 ###### Daily use angular filters / directives
 
-### **ng-module-name: form.input.formatter**
+### **ng-module-name: `form.input.formatter`**
 
 #### **1. percentage-filter**
 	
@@ -32,12 +32,12 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 ```
 
 NOTE: 	1. As per the convention I am prepending the currency symbol and appending the percentage symbol.
-		2. At the time of initialisation the values from the server side are sanitised to show in the UI. for example
-			3423.00 ---> `3,423` (for number and precision = any)
-			3423.4300 ---> `$3,423.4` (for currency and precision = 1)
-			3423.4300 ---> `3,423.43 %` (for percentage and precision = 2 or more)
-			null ---> NaN ---> `0` (for number and precision = 0)
-			undefined ---> NaN ---> `$0` (for currency and precision = 0)
+	2. At the time of initialisation the values from the server side are sanitised to show in the UI. for example
+		3423.00 ---> `3,423` (for number and precision = any)
+		3423.4300 ---> `$3,423.4` (for currency and precision = 1)
+		3423.4300 ---> `3,423.43 %` (for percentage and precision = 2 or more)
+		null ---> NaN ---> `0` (for number and precision = 0)
+		undefined ---> NaN ---> `$0` (for currency and precision = 0)
 
 *	Existing Minor Issues
     
