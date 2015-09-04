@@ -1,13 +1,13 @@
 # ng-utils
 ###### Daily use angular filters / directives
 
-### **form.input.formatter**
+### **ng-module-name: form.input.formatter**
 
-#### **percentage-filter**
+#### **1. percentage-filter**
 	
 ###### It is to show the value by appending the percentage or any other symbol passed as the filter argument 
 
-#### **input-formatter-filter**
+#### **2. input-formatter-filter**
 
 ###### Often we come across the cases where we need to format the values to represent in the UI while the database or the model objects at the front end stores them unformatted for calculation/some-other-purposes.
     
