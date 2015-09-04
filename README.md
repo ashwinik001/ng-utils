@@ -5,7 +5,7 @@
 
 #### **1. percentage-filter**
 	
-###### It is to show the value by appending the percentage or any other symbol passed as the filter argument 
+###### It can be used in the UI to show the model-value with comma separating and by appending the percentage or any other symbol
 
 #### **2. input-formatter-filter**
 
@@ -33,11 +33,11 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 
 NOTE: 	1. As per the convention I am prepending the currency symbol and appending the percentage symbol.
 	2. At the time of initialisation the values from the server side are sanitised to show in the UI. for example
-		3423.00 ---> `3,423` (for number and precision = any)
-		3423.4300 ---> `$3,423.4` (for currency and precision = 1)
-		3423.4300 ---> `3,423.43 %` (for percentage and precision = 2 or more)
-		null ---> NaN ---> `0` (for number and precision = 0)
-		undefined ---> NaN ---> `$0` (for currency and precision = 0)
+		1.	3423.00 ---> `3,423` (for number and precision = any)
+		2.	3423.4300 ---> `$3,423.4` (for currency and precision = 1)
+		3.	3423.4300 ---> `3,423.43 %` (for percentage and precision = 2 or more)
+		4.	null ---> NaN ---> `0` (for number and precision = 0)
+		5.	undefined ---> NaN ---> `$0` (for currency and precision = 0)
 
 *	Existing Minor Issues
     
