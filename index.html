@@ -5,17 +5,99 @@
 
 	<title>ngUtils</title>
 
+	<style>
+
+		.demoItemContainer {
+			margin: 10px;
+			padding: 10px;
+		}
+
+		.demoItemContainer span {
+			margin-right: 10px;
+		}
+
+		.demoItemContainer span input{
+			margin-right: 10px;
+			height: 20px;
+			width: 200px;
+			font-size: 14px;
+		}
+
+	</style>
+
 	<script src="plugins/bower_components/angular/angular.js"></script>
-	<script src="ng-filters/input-formatter-directive.js"></script>
-	<script src="ng-directives/input-formatter-directive.js"></script>
+	<script src="input-formatter.js"></script>
+
+	<script>
+
+		angular.module('angulaDemoApp', ['form.input.formatter']);
+
+	</script>
 
 </head>
 
-<body>
+<body ng-app="angulaDemoApp">
 
 
+<div class="demoItemContainer">
 
+	<span>Number-0:</span>
 
+	<span><input input-formatter="number" type="text" id="number0" ng-model="number0"/></span>
+
+	<span>Model Value : {{ number0 }}</span>
+
+</div>
+
+<div class="demoItemContainer">
+
+	<span>Number-1:</span>
+
+	<span><input input-formatter="number:1" type="text" id="number1" ng-model="number1"/></span>
+
+	<span>Model Value : {{number1}}</span>
+
+</div>
+
+<div class="demoItemContainer">
+
+	<span>Currency-$-0:</span>
+
+	<span><input input-formatter="currency:$" type="text" id="number2" ng-model="number2"/></span>
+
+	<span>Model Value : {{ number2 }}</span>
+
+</div>
+
+<div class="demoItemContainer">
+
+	<span>Currency-$-2:</span>
+
+	<span><input input-formatter="currency:$:2" type="text" id="number3" ng-model="number3"/></span>
+
+	<span>Model Value : {{ number3 }}</span>
+
+</div>
+
+<div class="demoItemContainer">
+
+	<span>Percentage-%-0:</span>
+
+	<span><input input-formatter="percentage:%" type="text" id="number4" ng-model="number4"/></span>
+
+	<span>Model Value : {{ number4 }}</span>
+
+</div>
+
+<div class="demoItemContainer">
+
+	<span>Percentage-#-3:</span>
+
+	<span><input input-formatter="percentage:#:3" type="text" id="number5" ng-model="number5"/></span>
+
+	<span>Model Value : {{ number5 }}</span>
+
+</div>
 
 </body>
 
