@@ -31,6 +31,7 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 <input input-formatter="percentage:#:2" type="text" ng-model="your-model"/>
 ```
 
+
 **NOTE:**
 
 1.	As per the convention I am prepending the currency symbol and appending the percentage symbol.
@@ -42,8 +43,10 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 	4.	null ---> NaN ---> `0` (for number and precision = 0)
 	5.	undefined ---> NaN ---> `$0` (for currency and precision = 0)
 
-*	Existing Minor Issues
-    
+
+
+**Existing Minor Issues**
+
 	1.	The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number
 	2.	Currently only `percentage`, `number` and `currency` filters are supported.
 	3.	...
