@@ -48,7 +48,7 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 		
 	1.	3423.00 ---> `3,423` (for number and precision = any)
 	2.	3423.4300 ---> `$3,423.4` (for currency and precision = 1)
-	3.	3423.4300 ---> `3,423.43 %` (for percentage and precision = 2 or more)
+	3.	3423.4300 ---> `3,423.43%` (for percentage and precision = 2 or more)
 	4.	null ---> NaN ---> `0` (for number and precision = 0)
 	5.	undefined ---> NaN ---> `$0` (for currency and precision = 0)
 

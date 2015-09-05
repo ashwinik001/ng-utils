@@ -1,6 +1,7 @@
 /**
  * Created by ashwinikumar
  *     on 23/07/15.
+ *
  */
 
 (function (ng) {
@@ -32,7 +33,7 @@
 
 				precision = ((precision || precision === 0) && isFinite(precision)) ? precision : 0;
 
-				return $filter('number')(sample, precision) + ' ' + appender;
+				return $filter('number')(sample, precision) + '' + appender;
 			};
 		}])
 		.directive('inputFormatter', ['$filter', function ($filter) {
@@ -46,7 +47,7 @@
 					var inputFormatterAttrs = $iAttrs.inputFormatter.split(':'),
 						filterName, viewCleanerRegex,
 						el = $iElement[0],
-						firstParam, secondParam, precisionParam, formatterParam;
+						firstParam, secondParam, precisionParam, formatterParam, isFormatterPrefix;
 
 					if (inputFormatterAttrs.length === 0) {
 						return;
@@ -58,9 +59,14 @@
 
 					if (filterName === NUMBER_DIRECTIVE_NAME) {
 						precisionParam = parseInt(firstParam);
-					} else if (filterName === CURRENCY_DIRECTIVE_NAME || filterName === PERCENTAGE_DIRECTIVE_NAME) {
+					} else if (filterName === CURRENCY_DIRECTIVE_NAME) {
 						precisionParam = parseInt(secondParam);
 						formatterParam = firstParam;
+						isFormatterPrefix = true;
+					} else if (filterName === PERCENTAGE_DIRECTIVE_NAME) {
+						precisionParam = parseInt(secondParam);
+						formatterParam = firstParam;
+						isFormatterPrefix = false;
 					} else {
 						return;
 					}
@@ -88,11 +94,27 @@
 
 					ngModelCtrl.$parsers.push(function toModel(inputViewVal) {
 
-						var cleanViewVal = inputViewVal.toString().replace(viewCleanerRegex, ''),
+						var cleanViewVal = inputViewVal,
 							modelValue, formattedInputViewVal,
-							userFedPrecision,
+							inputViewValFormatterIndex,
 							userEnteredPrecisionIncludingDot = 0,
 							userEnteredPrecision = 0;
+
+						//stripping the characters before and after the formatters as needed
+						if (isFormatterPrefix === true) {
+							inputViewValFormatterIndex = inputViewVal.indexOf(formatterParam);
+							if (inputViewValFormatterIndex > 0) {
+								cleanViewVal = inputViewVal.substring(inputViewValFormatterIndex);
+							}
+						} else if (isFormatterPrefix === false) {
+							inputViewValFormatterIndex = inputViewVal.lastIndexOf(formatterParam);
+							if ((inputViewValFormatterIndex > 0) &&
+								(inputViewValFormatterIndex < (inputViewVal.length - 1))) {
+								cleanViewVal = inputViewVal.substring(0, inputViewValFormatterIndex);
+							}
+						}
+
+						cleanViewVal = cleanViewVal.toString().replace(viewCleanerRegex, '');
 
 						if (cleanViewVal.indexOf('.') !== -1) {
 							userEnteredPrecisionIncludingDot = cleanViewVal.substring(
@@ -109,13 +131,13 @@
 						}
 
 						if (filterName === NUMBER_DIRECTIVE_NAME) {
-							userFedPrecision = (userEnteredPrecision < precisionParam ?
+							userEnteredPrecision = (userEnteredPrecision < precisionParam ?
 								userEnteredPrecision : precisionParam);
-							formattedInputViewVal = $filter(filterName)(cleanViewVal, userFedPrecision);
+							formattedInputViewVal = $filter(filterName)(cleanViewVal, userEnteredPrecision);
 						} else if (filterName === CURRENCY_DIRECTIVE_NAME || filterName === PERCENTAGE_DIRECTIVE_NAME) {
-							userFedPrecision = (userEnteredPrecision < precisionParam ?
+							userEnteredPrecision = (userEnteredPrecision < precisionParam ?
 								userEnteredPrecision : precisionParam);
-							formattedInputViewVal = $filter(filterName)(cleanViewVal, firstParam, userFedPrecision);
+							formattedInputViewVal = $filter(filterName)(cleanViewVal, firstParam, userEnteredPrecision);
 						}
 
 						if (userEnteredPrecisionIncludingDot === 1) {
