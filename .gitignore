@@ -56,7 +56,8 @@ node_modules
 
 
 ### Plugins ###
-plugins/**
+#Commented out for making the project site live
+#plugins/**
 
 #local config files
 **/*.local*
