@@ -139,8 +139,6 @@
 							modelValue = parseInt(modelValue);
 						}
 
-						//console.info('modelValue: ', modelValue);
-
 						return modelValue;
 					});
 

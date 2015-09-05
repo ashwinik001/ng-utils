@@ -31,11 +31,11 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 <input input-formatter="percentage:#:2" type="text" ng-model="your-model"/>
 
 <span>
-{{your-model | percentage:#:2}}
+{{your-model | percentage:'#':2}}
 </span>
 
 <span>
-{{your-model | percentage:%}}
+{{your-model | percentage}}
 </span>
 
 ```
@@ -58,3 +58,4 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 
 	1.	Sometimes the cursor position is not very accurate.
 	2.  The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number.
+	3.  ...
