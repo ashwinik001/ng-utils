@@ -29,6 +29,15 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 <input input-formatter="currency:$:2" type="text" ng-model="your-model"/>
 <input input-formatter="percentage:%" type="text" ng-model="your-model"/>
 <input input-formatter="percentage:#:2" type="text" ng-model="your-model"/>
+
+<span>
+{{your-model | percentage:'#':2}}
+</span>
+
+<span>
+{{your-model | percentage}}
+</span>
+
 ```
 
 
@@ -39,7 +48,7 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 		
 	1.	3423.00 ---> `3,423` (for number and precision = any)
 	2.	3423.4300 ---> `$3,423.4` (for currency and precision = 1)
-	3.	3423.4300 ---> `3,423.43 %` (for percentage and precision = 2 or more)
+	3.	3423.4300 ---> `3,423.43%` (for percentage and precision = 2 or more)
 	4.	null ---> NaN ---> `0` (for number and precision = 0)
 	5.	undefined ---> NaN ---> `$0` (for currency and precision = 0)
 
@@ -47,6 +56,6 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 
 **Existing Minor Issues**
 
-	1.	The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number
-	2.	Currently only `percentage`, `number` and `currency` filters are supported.
-	3.	...
+	1.	Sometimes the cursor position is not very accurate.
+	2.  The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number.
+	3.  ...

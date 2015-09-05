@@ -1,6 +1,7 @@
 /**
- * Created by ashwinikumar<kumarashwini@outlook.com>
+ * Created by ashwinikumar
  *     on 23/07/15.
+ *
  */
 
 (function (ng) {
@@ -32,7 +33,7 @@
 
 				precision = ((precision || precision === 0) && isFinite(precision)) ? precision : 0;
 
-				return $filter('number')(sample, precision) + ' ' + appender;
+				return $filter('number')(sample, precision) + '' + appender;
 			};
 		}])
 		.directive('inputFormatter', ['$filter', function ($filter) {
@@ -46,7 +47,7 @@
 					var inputFormatterAttrs = $iAttrs.inputFormatter.split(':'),
 						filterName, viewCleanerRegex,
 						el = $iElement[0],
-						firstParam, secondParam, precisionParam, formatterParam;
+						firstParam, secondParam, precisionParam, formatterParam, isFormatterPrefix;
 
 					if (inputFormatterAttrs.length === 0) {
 						return;
@@ -58,14 +59,19 @@
 
 					if (filterName === NUMBER_DIRECTIVE_NAME) {
 						precisionParam = parseInt(firstParam);
-					} else if (filterName === CURRENCY_DIRECTIVE_NAME || filterName === PERCENTAGE_DIRECTIVE_NAME) {
+					} else if (filterName === CURRENCY_DIRECTIVE_NAME) {
 						precisionParam = parseInt(secondParam);
 						formatterParam = firstParam;
+						isFormatterPrefix = true;
+					} else if (filterName === PERCENTAGE_DIRECTIVE_NAME) {
+						precisionParam = parseInt(secondParam);
+						formatterParam = firstParam;
+						isFormatterPrefix = false;
 					} else {
 						return;
 					}
 
-					if(precisionParam !== precisionParam) {
+					if (precisionParam !== precisionParam) {
 						precisionParam = 0;
 					}
 
@@ -86,56 +92,74 @@
 							'\' as a prefix/suffix for showing in the view for formatting.');
 					}
 
-					ngModelCtrl.$parsers.push(function toModel(oldViewVal) {
+					ngModelCtrl.$parsers.push(function toModel(inputViewVal) {
 
-						var cleanViewVal = oldViewVal.toString().replace(viewCleanerRegex, ''),
-							modelValue, newViewVal,
-							userFedPrecision,
-							userEnteredPrecisionIncludingDot = 0, userEnteredPrecision = 0;
+						var cleanViewVal = inputViewVal,
+							modelValue, formattedInputViewVal,
+							inputViewValFormatterIndex,
+							userEnteredPrecisionIncludingDot = 0,
+							userEnteredPrecision = 0;
+
+						//stripping the characters before and after the formatters as needed
+						if (isFormatterPrefix === true) {
+							inputViewValFormatterIndex = inputViewVal.indexOf(formatterParam);
+							if (inputViewValFormatterIndex > 0) {
+								cleanViewVal = inputViewVal.substring(inputViewValFormatterIndex);
+							}
+						} else if (isFormatterPrefix === false) {
+							inputViewValFormatterIndex = inputViewVal.lastIndexOf(formatterParam);
+							if ((inputViewValFormatterIndex > 0) &&
+								(inputViewValFormatterIndex < (inputViewVal.length - 1))) {
+								cleanViewVal = inputViewVal.substring(0, inputViewValFormatterIndex);
+							}
+						}
+
+						cleanViewVal = cleanViewVal.toString().replace(viewCleanerRegex, '');
 
 						if (cleanViewVal.indexOf('.') !== -1) {
 							userEnteredPrecisionIncludingDot = cleanViewVal.substring(
 								cleanViewVal.indexOf('.')).length;
 							userEnteredPrecision = userEnteredPrecisionIncludingDot - 1;
+
+							//stripping the extra character, if any
+							cleanViewVal = cleanViewVal.substring(0, cleanViewVal.indexOf('.') + precisionParam + 1);
+
 						}
 
-						if(userEnteredPrecisionIncludingDot === 1) {
+						if (userEnteredPrecisionIncludingDot === 1) {
 							userEnteredPrecision = 1;
 						}
 
 						if (filterName === NUMBER_DIRECTIVE_NAME) {
-							userFedPrecision = (userEnteredPrecision < precisionParam ?
+							userEnteredPrecision = (userEnteredPrecision < precisionParam ?
 								userEnteredPrecision : precisionParam);
-							newViewVal = $filter(filterName)(cleanViewVal, userFedPrecision);
+							formattedInputViewVal = $filter(filterName)(cleanViewVal, userEnteredPrecision);
 						} else if (filterName === CURRENCY_DIRECTIVE_NAME || filterName === PERCENTAGE_DIRECTIVE_NAME) {
-							userFedPrecision = (userEnteredPrecision < precisionParam ?
+							userEnteredPrecision = (userEnteredPrecision < precisionParam ?
 								userEnteredPrecision : precisionParam);
-							newViewVal = $filter(filterName)(cleanViewVal, firstParam, userFedPrecision);
+							formattedInputViewVal = $filter(filterName)(cleanViewVal, firstParam, userEnteredPrecision);
 						}
 
-						if (newViewVal === oldViewVal) {
-							return newViewVal;
+						if (userEnteredPrecisionIncludingDot === 1) {
+							formattedInputViewVal = formattedInputViewVal.replace(/\.0/g, '.');
+						} else if (cleanViewVal === '') {
+							formattedInputViewVal = '';
 						}
 
-						if(userEnteredPrecisionIncludingDot === 1) {
-							newViewVal = newViewVal.replace(/\.0/g, '.');
-						}
-						else if(cleanViewVal === '') {
-							newViewVal = '';
+						if (formattedInputViewVal === inputViewVal) {
+							return formattedInputViewVal;
 						}
 
-						//customRender(el, oldViewVal, newViewVal, ngModelCtrl, true);
-						customRender(el, oldViewVal, newViewVal, ngModelCtrl);
+						//customRender(el, inputViewVal, formattedInputViewVal, ngModelCtrl, true);
+						customRender(el, inputViewVal, formattedInputViewVal, ngModelCtrl);
 
-						modelValue = newViewVal.replace(viewCleanerRegex, '');
+						modelValue = formattedInputViewVal.replace(viewCleanerRegex, '');
 
 						if (precisionParam !== 0) {
 							modelValue = parseFloat(modelValue);
 						} else {
 							modelValue = parseInt(modelValue);
 						}
-
-						console.info('modelValue: ', modelValue);
 
 						return modelValue;
 					});
@@ -168,8 +192,8 @@
 						//removing the insignificant zeros from the end
 						// 	`$2,305.690` ---> `$2,305.69`, `20,345.69000 %` ---> `20,345.69 %`,
 						// 	`345.609` ---> `345.609`, `2.00` --> `2`, `0.00` ---> `0`
-						viewValue = viewValue.replace(/\.(\d*?)0+(\D*)$/g, function(m, grp1, grp2) {
-							return (grp1.length > 0 ? "." : "") + grp1 + grp2;
+						viewValue = viewValue.replace(/\.(\d*?)0+(\D*)$/g, function (m, grp1, grp2) {
+							return (grp1.length > 0 ? '.' : '') + grp1 + grp2;
 						});
 
 						//customRender(el, viewValue, modelValue, ngModelCtrl);

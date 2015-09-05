@@ -30,22 +30,34 @@
 
 	<script>
 
-		angular.module('angulaDemoApp', ['form.input.formatter']);
+		angular.module('angulaDemoApp', ['form.input.formatter'])
+				.controller('demoTestController', function($scope) {
+
+					$scope.models = {
+						number0: 0,
+						number1: 0,
+						number2: 0,
+						number3: 0,
+						number4: 0,
+						number5: 0
+					};
+
+				});
 
 	</script>
 
 </head>
 
-<body ng-app="angulaDemoApp">
+<body ng-app="angulaDemoApp" ng-controller="demoTestController">
 
 
 <div class="demoItemContainer">
 
 	<span>Number-0:</span>
 
-	<span><input input-formatter="number" type="text" id="number0" ng-model="number0"/></span>
+	<span><input input-formatter="number" type="text" ng-model="models.number0"/></span>
 
-	<span>Model Value : {{ number0 }}</span>
+	<span>Model Value : {{ models.number0 }}</span>
 
 </div>
 
@@ -53,9 +65,9 @@
 
 	<span>Number-1:</span>
 
-	<span><input input-formatter="number:1" type="text" id="number1" ng-model="number1"/></span>
+	<span><input input-formatter="number:1" type="text" ng-model="models.number1"/></span>
 
-	<span>Model Value : {{number1}}</span>
+	<span>Model Value : {{ models.number1 }}</span>
 
 </div>
 
@@ -63,9 +75,9 @@
 
 	<span>Currency-$-0:</span>
 
-	<span><input input-formatter="currency:$" type="text" id="number2" ng-model="number2"/></span>
+	<span><input input-formatter="currency:$" type="text" ng-model="models.number2"/></span>
 
-	<span>Model Value : {{ number2 }}</span>
+	<span>Model Value : {{ models.number2 }}</span>
 
 </div>
 
@@ -73,9 +85,9 @@
 
 	<span>Currency-$-2:</span>
 
-	<span><input input-formatter="currency:$:2" type="text" id="number3" ng-model="number3"/></span>
+	<span><input input-formatter="currency:$:2" type="text" ng-model="models.number3"/></span>
 
-	<span>Model Value : {{ number3 }}</span>
+	<span>Model Value : {{ models.number3 }}</span>
 
 </div>
 
@@ -83,9 +95,11 @@
 
 	<span>Percentage-%-0:</span>
 
-	<span><input input-formatter="percentage:%" type="text" id="number4" ng-model="number4"/></span>
+	<span><input input-formatter="percentage:%" type="text" ng-model="models.number4"/></span>
 
-	<span>Model Value : {{ number4 }}</span>
+	<span>Model Value : {{ models.number4 }}</span>
+
+	<span>Filtered Model Value in percentage : {{ models.number4 | percentage:'#':2 }}</span>
 
 </div>
 
@@ -93,9 +107,9 @@
 
 	<span>Percentage-#-3:</span>
 
-	<span><input input-formatter="percentage:#:3" type="text" id="number5" ng-model="number5"/></span>
+	<span><input input-formatter="percentage:#:3" type="text" ng-model="models.number5"/></span>
 
-	<span>Model Value : {{ number5 }}</span>
+	<span>Model Value : {{ models.number5 }}</span>
 
 </div>
 
