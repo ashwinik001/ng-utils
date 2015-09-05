@@ -1,5 +1,6 @@
 # ng-utils
 ###### Daily use angular filters / directives
+###### http://dopeddude.github.io/ng-utils/
 
 ### **ng-module-name: `form.input.formatter`**
 
