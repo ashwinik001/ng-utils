@@ -29,6 +29,15 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 <input input-formatter="currency:$:2" type="text" ng-model="your-model"/>
 <input input-formatter="percentage:%" type="text" ng-model="your-model"/>
 <input input-formatter="percentage:#:2" type="text" ng-model="your-model"/>
+
+<span>
+{{your-model | percentage:#:2}}
+</span>
+
+<span>
+{{your-model | percentage:%}}
+</span>
+
 ```
 
 
