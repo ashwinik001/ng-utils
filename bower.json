@@ -1,12 +1,19 @@
 {
 	"name": "ng-utils",
+    "version": "0.2.3",
   	"description": "Filters and directives for angular, frequently needed",
-  	"keywords": ["angular", "filters", "directives", "utilities", "extension", "utils"],
+    "homepage": "http://dopeddude.github.io/ng-utils/",
+  	"keywords": ["angular", "filters", "directives", "utilities", "extension", "utils", "ng-utils", "angular-utils"],
 	"authors": [
-		"Ashwini Kumar"
+		"Ashwini Kumar<kumarashwini@outlook.com>"
 	],
+    "main": "input-formatter.js",
+    "moduleType": [
+      "globals"
+    ],
+    "license": "MIT",
 	"ignore": [
-		"node_modules",
+        "node_modules",
 		"**/bower_components"
 	],
 	"dependencies": {
