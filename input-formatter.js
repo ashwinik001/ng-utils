@@ -1,5 +1,5 @@
 /**
- * Created by ashwinikumar<kumarashwini@outlook.com>
+ * Created by ashwinikumar
  *     on 23/07/15.
  */
 
@@ -65,7 +65,7 @@
 						return;
 					}
 
-					if(precisionParam !== precisionParam) {
+					if (precisionParam !== precisionParam) {
 						precisionParam = 0;
 					}
 
@@ -91,7 +91,8 @@
 						var cleanViewVal = inputViewVal.toString().replace(viewCleanerRegex, ''),
 							modelValue, formattedInputViewVal,
 							userFedPrecision,
-							userEnteredPrecisionIncludingDot = 0, userEnteredPrecision = 0;
+							userEnteredPrecisionIncludingDot = 0,
+							userEnteredPrecision = 0;
 
 						if (cleanViewVal.indexOf('.') !== -1) {
 							userEnteredPrecisionIncludingDot = cleanViewVal.substring(
@@ -103,7 +104,7 @@
 
 						}
 
-						if(userEnteredPrecisionIncludingDot === 1) {
+						if (userEnteredPrecisionIncludingDot === 1) {
 							userEnteredPrecision = 1;
 						}
 
@@ -117,10 +118,9 @@
 							formattedInputViewVal = $filter(filterName)(cleanViewVal, firstParam, userFedPrecision);
 						}
 
-						if(userEnteredPrecisionIncludingDot === 1) {
+						if (userEnteredPrecisionIncludingDot === 1) {
 							formattedInputViewVal = formattedInputViewVal.replace(/\.0/g, '.');
-						}
-						else if(cleanViewVal === '') {
+						} else if (cleanViewVal === '') {
 							formattedInputViewVal = '';
 						}
 
@@ -139,7 +139,7 @@
 							modelValue = parseInt(modelValue);
 						}
 
-						console.info('modelValue: ', modelValue);
+						//console.info('modelValue: ', modelValue);
 
 						return modelValue;
 					});
@@ -172,8 +172,8 @@
 						//removing the insignificant zeros from the end
 						// 	`$2,305.690` ---> `$2,305.69`, `20,345.69000 %` ---> `20,345.69 %`,
 						// 	`345.609` ---> `345.609`, `2.00` --> `2`, `0.00` ---> `0`
-						viewValue = viewValue.replace(/\.(\d*?)0+(\D*)$/g, function(m, grp1, grp2) {
-							return (grp1.length > 0 ? "." : "") + grp1 + grp2;
+						viewValue = viewValue.replace(/\.(\d*?)0+(\D*)$/g, function (m, grp1, grp2) {
+							return (grp1.length > 0 ? '.' : '') + grp1 + grp2;
 						});
 
 						//customRender(el, viewValue, modelValue, ngModelCtrl);
