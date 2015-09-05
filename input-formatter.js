@@ -86,10 +86,10 @@
 							'\' as a prefix/suffix for showing in the view for formatting.');
 					}
 
-					ngModelCtrl.$parsers.push(function toModel(oldViewVal) {
+					ngModelCtrl.$parsers.push(function toModel(inputViewVal) {
 
-						var cleanViewVal = oldViewVal.toString().replace(viewCleanerRegex, ''),
-							modelValue, newViewVal,
+						var cleanViewVal = inputViewVal.toString().replace(viewCleanerRegex, ''),
+							modelValue, formattedInputViewVal,
 							userFedPrecision,
 							userEnteredPrecisionIncludingDot = 0, userEnteredPrecision = 0;
 
@@ -97,6 +97,10 @@
 							userEnteredPrecisionIncludingDot = cleanViewVal.substring(
 								cleanViewVal.indexOf('.')).length;
 							userEnteredPrecision = userEnteredPrecisionIncludingDot - 1;
+
+							//stripping the extra character, if any
+							cleanViewVal = cleanViewVal.substring(0, cleanViewVal.indexOf('.') + precisionParam + 1);
+
 						}
 
 						if(userEnteredPrecisionIncludingDot === 1) {
@@ -106,28 +110,28 @@
 						if (filterName === NUMBER_DIRECTIVE_NAME) {
 							userFedPrecision = (userEnteredPrecision < precisionParam ?
 								userEnteredPrecision : precisionParam);
-							newViewVal = $filter(filterName)(cleanViewVal, userFedPrecision);
+							formattedInputViewVal = $filter(filterName)(cleanViewVal, userFedPrecision);
 						} else if (filterName === CURRENCY_DIRECTIVE_NAME || filterName === PERCENTAGE_DIRECTIVE_NAME) {
 							userFedPrecision = (userEnteredPrecision < precisionParam ?
 								userEnteredPrecision : precisionParam);
-							newViewVal = $filter(filterName)(cleanViewVal, firstParam, userFedPrecision);
-						}
-
-						if (newViewVal === oldViewVal) {
-							return newViewVal;
+							formattedInputViewVal = $filter(filterName)(cleanViewVal, firstParam, userFedPrecision);
 						}
 
 						if(userEnteredPrecisionIncludingDot === 1) {
-							newViewVal = newViewVal.replace(/\.0/g, '.');
+							formattedInputViewVal = formattedInputViewVal.replace(/\.0/g, '.');
 						}
 						else if(cleanViewVal === '') {
-							newViewVal = '';
+							formattedInputViewVal = '';
 						}
 
-						//customRender(el, oldViewVal, newViewVal, ngModelCtrl, true);
-						customRender(el, oldViewVal, newViewVal, ngModelCtrl);
+						if (formattedInputViewVal === inputViewVal) {
+							return formattedInputViewVal;
+						}
 
-						modelValue = newViewVal.replace(viewCleanerRegex, '');
+						//customRender(el, inputViewVal, formattedInputViewVal, ngModelCtrl, true);
+						customRender(el, inputViewVal, formattedInputViewVal, ngModelCtrl);
+
+						modelValue = formattedInputViewVal.replace(viewCleanerRegex, '');
 
 						if (precisionParam !== 0) {
 							modelValue = parseFloat(modelValue);

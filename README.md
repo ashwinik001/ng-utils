@@ -47,6 +47,5 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 
 **Existing Minor Issues**
 
-	1.	The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number
-	2.	Currently only `percentage`, `number` and `currency` filters are supported.
-	3.	...
+	1.	Sometimes the cursor position is not very accurate.
+	2.  The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number.
