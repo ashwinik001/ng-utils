@@ -36,7 +36,7 @@
 				return $filter('number')(sample, precision) + '' + appender;
 			};
 		}])
-		.directive('inputFormatter', ['$filter', function ($filter) {
+		.directive('inputFormatter', ['$filter', '$browser', function ($filter, $browser) {
 
 			return {
 				require: 'ngModel',
@@ -146,13 +146,6 @@
 							formattedInputViewVal = '';
 						}
 
-						if (formattedInputViewVal === inputViewVal) {
-							return formattedInputViewVal;
-						}
-
-						//customRender(el, inputViewVal, formattedInputViewVal, ngModelCtrl, true);
-						customRender(el, inputViewVal, formattedInputViewVal, ngModelCtrl);
-
 						modelValue = formattedInputViewVal.replace(viewCleanerRegex, '');
 
 						if (precisionParam !== 0) {
@@ -160,6 +153,15 @@
 						} else {
 							modelValue = parseInt(modelValue);
 						}
+
+						modelValue = modelValue || 0;
+
+						if (formattedInputViewVal === inputViewVal) {
+							return modelValue;
+						}
+
+						//customRender(el, inputViewVal, formattedInputViewVal, ngModelCtrl, true);
+						customRender(el, inputViewVal, formattedInputViewVal, ngModelCtrl);
 
 						return modelValue;
 					});
@@ -200,6 +202,21 @@
 
 						return viewValue;
 					});
+
+					/*$iElement.on('copy', function() {
+
+					});*/
+
+					$iElement.on('paste cut', function() {
+						$browser.defer(
+							function() {
+								angular.forEach(ngModelCtrl.$parsers, function (parser) {
+									parser(ngModelCtrl.$viewValue);
+								});
+							}
+						);
+					});
+
 				}
 			};
 		}]);
