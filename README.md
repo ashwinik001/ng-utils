@@ -28,8 +28,10 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 <input input-formatter="currency" type="text" ng-model="your-model"/>
 <input input-formatter="currency:£" type="text" ng-model="your-model"/>
 <input input-formatter="currency:$:2" type="text" ng-model="your-model"/>
+<input input-formatter="currency:$:2" type="text" ng-model="your-model" allow-negative="true"/>
 <input input-formatter="percentage:%" type="text" ng-model="your-model"/>
 <input input-formatter="percentage:#:2" type="text" ng-model="your-model"/>
+<input input-formatter="percentage:%" type="text" ng-model="your-model" allow-negative="true"/>
 
 <span>
 {{your-model | percentage:'#':2}}
@@ -58,5 +60,7 @@ var module = ng.module('your-module-name', ['form.input.formatter']);
 **Existing Minor Issues**
 
 	1.	Sometimes the cursor position is not very accurate.
-	2.  The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number.
-	3.  ...
+	2.  The negative numbers are yet to be supported for the number directive. (Else it works fine for the currency 
+	and percentage directive)
+	3.  The `,` can not be deleted manually inside the input box -- Which is fine for the formatted number.
+	4.  ...
