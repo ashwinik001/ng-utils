@@ -3,113 +3,227 @@
 
 <head>
 
-	<title>ngUtils</title>
+    <title>ngUtils</title>
 
-	<style>
+    <style>
 
-		.demoItemContainer {
-			margin: 10px;
-			padding: 10px;
-		}
+        *, *:before, *:after {
+            box-sizing: border-box;
+        }
 
-		.demoItemContainer span {
-			margin-right: 10px;
-		}
+        .sectionContainer {
+            padding: 10px;
+            margin: 10px;
+            border: 2px solid crimson;
+            width: 800px;
+        }
 
-		.demoItemContainer span input{
-			margin-right: 10px;
-			height: 20px;
-			width: 200px;
-			font-size: 14px;
-		}
+        .demoItemContainer {
+            margin: 15px;
+            padding: 10px;
+        }
 
-	</style>
+        .demoItemContainer header {
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 17px;
+        }
 
-	<script src="plugins/bower_components/angular/angular.js"></script>
-	<script src="input-formatter.js"></script>
+        .demoItemContainer span {
+            margin-right: 10px;
+        }
 
-	<script>
+        .demoItemContainer span input {
+            margin-right: 10px;
+            height: 20px;
+            width: 200px;
+            font-size: 14px;
+        }
 
-		angular.module('angulaDemoApp', ['form.input.formatter'])
-				.controller('demoTestController', function($scope) {
+    </style>
 
-					$scope.models = {
-						number0: 0,
-						number1: 0,
-						number2: 0,
-						number3: 0,
-						number4: 0,
-						number5: 0
-					};
+    <script src="plugins/bower_components/angular/angular.js"></script>
+    <script src="input-formatter.js"></script>
 
-				});
+    <script>
 
-	</script>
+        angular.module('angulaDemoApp', ['form.input.formatter'])
+                .controller('demoTestController', function ($scope) {
+
+                    $scope.models = {
+                        number0: 0,
+                        number1: 0,
+                        number2: 0,
+                        number3: 0,
+                        number4: 0,
+                        number5: 0,
+                        number6: 0,
+                        number7: 0,
+                        number8: 0,
+                        number9: 0
+                    };
+
+                });
+
+    </script>
 
 </head>
 
 <body ng-app="angulaDemoApp" ng-controller="demoTestController">
 
 
-<div class="demoItemContainer">
+<div class="sectionContainer">
 
-	<span>Number-0:</span>
+    <div class="demoItemContainer">
 
-	<span><input input-formatter="number" type="text" ng-model="models.number0"/></span>
+        <header>Use Case 1: <i>(Number with no decimal places)</i></header>
 
-	<span>Model Value : {{ models.number0 }}</span>
+    <span>
+        &lt;input input-formatter="number" type="text" ng-model="models.number0"/&gt;
+    </span>
+
+        <br/>
+        <br/>
+
+        <span><input input-formatter="number" type="text" ng-model="models.number0"/></span>
+
+        <span>Model Value : {{ models.number0 }}</span>
+
+    </div>
+
+    <div class="demoItemContainer">
+
+        <header>Use Case 2: <i>(Number with 1 decimal places)</i></header>
+
+    <span>
+        &lt;input input-formatter="number:1" type="text" ng-model="models.number1"/&gt;
+    </span>
+
+        <br/>
+        <br/>
+
+        <span><input input-formatter="number:1" type="text" ng-model="models.number1"/></span>
+
+        <span>Model Value : {{ models.number1 }}</span>
+
+    </div>
+
+    <div class="demoItemContainer">
+
+        <header>Use Case 3:
+            <i>(Number with 1 decimal places and allow negative) - <b>NOT SUPPORTED FOR NOW</b></i></header>
+
+    <span>
+        &lt;input input-formatter="number:1" type="text" ng-model="models.number2" allow-negative="true"/&gt;
+    </span>
+
+        <br/>
+        <br/>
+
+        <span><input input-formatter="number:1" type="text" ng-model="models.number2" allow-negative="true"/></span>
+
+        <span>Model Value : {{ models.number2 }}</span>
+
+    </div>
 
 </div>
 
-<div class="demoItemContainer">
 
-	<span>Number-1:</span>
+<div class="sectionContainer">
 
-	<span><input input-formatter="number:1" type="text" ng-model="models.number1"/></span>
+    <div class="demoItemContainer">
 
-	<span>Model Value : {{ models.number1 }}</span>
+        <header>Use Case 4: <i>(Currency with no decimal places)</i></header>
 
+        <span>&lt;input input-formatter="currency:$" type="text" ng-model="models.number3"/&gt;</span>
+
+        <br/>
+        <br/>
+
+        <span><input input-formatter="currency:$" type="text" ng-model="models.number3"/></span>
+
+        <span>Model Value : {{ models.number3 }}</span>
+
+    </div>
+
+    <div class="demoItemContainer">
+
+        <header>Use Case 5: <i>(Currency with 2 decimal places)</i></header>
+
+        <span>&lt;input input-formatter="currency:$:2" type="text" ng-model="models.number4"/&gt;</span>
+
+        <br/>
+        <br/>
+
+        <span><input input-formatter="currency:$:2" type="text" ng-model="models.number4"/></span>
+
+        <span>Model Value : {{ models.number4 }}</span>
+
+    </div>
+
+    <div class="demoItemContainer">
+
+        <header>Use Case 6: <i>(Currency with 2 decimal places and allow negative)</i></header>
+
+        <span>&lt;input input-formatter="currency:$:2" type="text" ng-model="models.number5"
+            allow-negative="true"/&gt;</span>
+
+        <br/>
+        <br/>
+
+        <span><input input-formatter="currency:$:2" type="text" ng-model="models.number5" allow-negative="true"/></span>
+
+        <span>Model Value : {{ models.number5 }}</span>
+
+    </div>
 </div>
 
-<div class="demoItemContainer">
+<div class="sectionContainer">
+    <div class="demoItemContainer">
 
-	<span>Currency-$-0:</span>
+        <header>Use Case 7: <i>(Percentage with no decimal places)</i></header>
 
-	<span><input input-formatter="currency:$" type="text" ng-model="models.number2"/></span>
+        <span>&lt;input input-formatter="percentage:%" type="text" ng-model="models.number6"/&gt;</span>
 
-	<span>Model Value : {{ models.number2 }}</span>
+        <br/>
+        <br/>
 
-</div>
+        <span><input input-formatter="percentage:%" type="text" ng-model="models.number6"/></span>
 
-<div class="demoItemContainer">
+        <span>Model Value : {{ models.number6 }}</span>
 
-	<span>Currency-$-2:</span>
+    </div>
 
-	<span><input input-formatter="currency:$:2" type="text" ng-model="models.number3"/></span>
+    <div class="demoItemContainer">
 
-	<span>Model Value : {{ models.number3 }}</span>
+        <header>Use Case 8: <i>(Percentage with 3 decimal places and '#' as the appender in stead of '%')</i></header>
 
-</div>
+        <span>&lt;input input-formatter="percentage:#:3" type="text" ng-model="models.number7"/&gt;</span>
 
-<div class="demoItemContainer">
+        <br/>
+        <br/>
 
-	<span>Percentage-%-0:</span>
+        <span><input input-formatter="percentage:#:3" type="text" ng-model="models.number7"/></span>
 
-	<span><input input-formatter="percentage:%" type="text" ng-model="models.number4"/></span>
+        <span>Model Value : {{ models.number7 }}</span>
 
-	<span>Model Value : {{ models.number4 }}</span>
+    </div>
 
-	<span>Filtered Model Value in percentage: {{ models.number4 | percentage:'#':2 }} <i> with `#` as appender and up to two decimal places </i></span>
+    <div class="demoItemContainer">
 
-</div>
+        <header>Use Case 9:<i>(Percentage with 3 decimal places and allow negative)</i></header>
 
-<div class="demoItemContainer">
+        <span>&lt;input input-formatter="percentage:%:3" type="text" ng-model="models.number8"
+            allow-negative="true"/&gt;</span>
 
-	<span>Percentage-#-3:</span>
+        <br/>
+        <br/>
 
-	<span><input input-formatter="percentage:#:3" type="text" ng-model="models.number5"/></span>
+        <span><input input-formatter="percentage:%:3" type="text" ng-model="models.number8" allow-negative="true"/></span>
 
-	<span>Model Value : {{ models.number5 }}</span>
+        <span>Model Value : {{ models.number8 }}</span>
+
+    </div>
 
 </div>
 
