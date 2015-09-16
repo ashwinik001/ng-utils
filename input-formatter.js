@@ -47,6 +47,8 @@
 					var inputFormatterAttrs = $iAttrs.inputFormatter.split(':'),
 						filterName, viewCleanerRegex,
 						el = $iElement[0],
+						placeHolder = $iAttrs.placeholder,
+						allowNegative = $iAttrs.allowNegative,
 						firstParam, secondParam, precisionParam, formatterParam, isFormatterPrefix;
 
 					if (inputFormatterAttrs.length === 0) {
@@ -97,21 +99,30 @@
 						var cleanViewVal = inputViewVal,
 							modelValue, formattedInputViewVal,
 							inputViewValFormatterIndex,
+							isInputViewValNegative,
 							userEnteredPrecisionIncludingDot = 0,
 							userEnteredPrecision = 0;
 
 						//stripping the characters before and after the formatters as needed
 						if (isFormatterPrefix === true) {
 							inputViewValFormatterIndex = inputViewVal.indexOf(formatterParam);
-							if (inputViewValFormatterIndex > 0) {
+							if (inputViewValFormatterIndex >= 0) {
 								cleanViewVal = inputViewVal.substring(inputViewValFormatterIndex);
+                                //case of `$-12.34`
+                                isInputViewValNegative = (cleanViewVal.indexOf('-') === 1);
 							}
+                            else if (inputViewValFormatterIndex === -1) {
+                                //case of `-12.34`
+                                isInputViewValNegative = (cleanViewVal.indexOf('-') === 0);
+                            }
 						} else if (isFormatterPrefix === false) {
 							inputViewValFormatterIndex = inputViewVal.lastIndexOf(formatterParam);
 							if ((inputViewValFormatterIndex > 0) &&
 								(inputViewValFormatterIndex < (inputViewVal.length - 1))) {
 								cleanViewVal = inputViewVal.substring(0, inputViewValFormatterIndex);
 							}
+							//case of `-12.34%`
+							isInputViewValNegative = (cleanViewVal.indexOf('-') === 0);
 						}
 
 						cleanViewVal = cleanViewVal.toString().replace(viewCleanerRegex, '');
@@ -148,6 +159,20 @@
 
 						modelValue = formattedInputViewVal.replace(viewCleanerRegex, '');
 
+						if(isInputViewValNegative  && allowNegative) {
+							modelValue = '-' + modelValue;
+
+							if(isFormatterPrefix === true) {
+								//case of `$12.34` ---> `$-12.34`
+								formattedInputViewVal = formattedInputViewVal[0] + '-' +
+									formattedInputViewVal.substring(1);
+							}
+							else if(isFormatterPrefix === false) {
+								//case of `12.34%` ---> `-12.34%`
+								formattedInputViewVal = '-' + formattedInputViewVal;
+							}
+						}
+
 						if (precisionParam !== 0) {
 							modelValue = parseFloat(modelValue);
 						} else {
@@ -176,7 +201,8 @@
 						//	null ---> NaN ---> `0` (for number and precision = 0)
 						//	undefined ---> NaN ---> `$0` (for currency and precision = 0)
 
-						var viewValue;
+						var viewValue,
+							isModelNegative;
 
 						if (precisionParam !== 0) {
 							modelValue = parseFloat(modelValue);
@@ -188,6 +214,12 @@
 						//NaN ---> '0'
 						modelValue = modelValue ? modelValue.toString() : '0';
 
+						if (modelValue === '0' && placeHolder) {
+							return;
+						}
+
+						isModelNegative = (modelValue.indexOf('-') === 0);
+
 						viewValue = $filter(filterName)(modelValue.replace(viewCleanerRegex, ''),
 							firstParam, secondParam);
 
@@ -198,6 +230,10 @@
 							return (grp1.length > 0 ? '.' : '') + grp1 + grp2;
 						});
 
+						if(isModelNegative && allowNegative) {
+							viewValue = '-' + viewValue;
+						}
+
 						//customRender(el, viewValue, modelValue, ngModelCtrl);
 
 						return viewValue;
@@ -207,9 +243,9 @@
 
 					});*/
 
-					$iElement.on('paste cut', function() {
+					$iElement.on('paste cut', function () {
 						$browser.defer(
-							function() {
+							function () {
 								angular.forEach(ngModelCtrl.$parsers, function (parser) {
 									parser(ngModelCtrl.$viewValue);
 								});
